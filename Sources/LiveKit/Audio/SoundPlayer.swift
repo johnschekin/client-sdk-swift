@@ -172,7 +172,11 @@ extension SoundPlayer {
         playerNodePool.stop()
         engine.stop()
         engine.disconnect(playerNodePool)
-        playerNodePool.setMaximumFramesToRender(engine.outputNode.auAudioUnit.maximumFramesToRender)
+        // auAudioUnit (AVAudioIONode) is macOS 13+; guard explicitly — SwiftPM compiles this
+        // dependency below the consumer app's macOS 27 deployment target.
+        if #available(macOS 13.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *) {
+            playerNodePool.setMaximumFramesToRender(engine.outputNode.auAudioUnit.maximumFramesToRender)
+        }
         engine.connect(playerNodePool, to: engine.mainMixerNode,
                        format: outputFormat, playerNodeFormat: playerNodeFormat)
         try engine.start()

@@ -121,6 +121,9 @@ class AVAudioPlayerNodePool: @unchecked Sendable, Loggable {
     }
 
     func setMaximumFramesToRender(_ maxFrames: AUAudioFrameCount) {
+        // auAudioUnit on AVAudioIONode is macOS 13+. The consumer app deploys at macOS 27, but
+        // SwiftPM compiles this dependency at its own (lower) floor, so guard the API explicitly.
+        guard #available(macOS 13.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *) else { return }
         executionQueue.sync {
             mixerNode.auAudioUnit.maximumFramesToRender = maxFrames
             for item in items {
