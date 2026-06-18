@@ -7,7 +7,7 @@ let package = Package(
     name: "LiveKit",
     platforms: [
         .iOS(.v13),
-        .macOS(.v10_15),
+        .macOS(.v13),
         .macCatalyst(.v14),
         .tvOS(.v17),
     ],
